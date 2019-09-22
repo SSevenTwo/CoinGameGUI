@@ -34,6 +34,16 @@ public class Driver {
 		}
 
 		final GameEngine gameEngine = new GameEngineImpl();
+		
+	      // create some test players
+	      Player[] players = new Player[] { new SimplePlayer("1", "The Coin Master", 1000),
+	         new SimplePlayer("2", "The Loser", 750), new SimplePlayer("3", "The Dabbler", 500) };
+
+	      // main loop to add players and place a bet
+	      for (Player player : players)
+	      {
+	         gameEngine.addPlayer(player);
+	      }
 
 		SwingUtilities.invokeLater(new Runnable() {
 

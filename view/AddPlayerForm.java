@@ -1,55 +1,61 @@
 package view;
 
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Rectangle;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.border.Border;
 
 import controller.AddPlayerBtnListener;
 import model.interfaces.GameEngine;
+import view.interfaces.GuiForm;
 
-public class AddPlayerForm extends JPanel {
+public class AddPlayerForm extends GuiForm {
 	
 	private JTextField playerId;
 	private JTextField playerName;
 	private JTextField initialPoints;
 	private JButton addPlayerBtn;
-//	private FormListener listener;
-	private GameEngine gameEngine;
+	private MainFrame mainFrame;
 
-	public AddPlayerForm(GameEngine gameEngine) {
-		setLayout(new GridBagLayout());
-		this.gameEngine = gameEngine;
+	public AddPlayerForm(MainFrame mainFrame, GameEngine gameEngine) {
+		super(null, gameEngine, "Add Player: ");
+		setVisible(true);
+		addActionListenerAndSetMainFrame(mainFrame);
+	}
 
-		// Setting a border
-		Border innerBorder = BorderFactory.createTitledBorder("Add Player");
-		Border outerBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
-		
-		Rectangle r = this.getBounds();
-		setPreferredSize(new Dimension(200, (int) r.getHeight()));
-		
-		//Make components
+	public JTextField getPlayerId() {
+		return playerId;
+	}
+
+	public JTextField getPlayerName() {
+		return playerName;
+	}
+
+	public JTextField getInitialPoints() {
+		return initialPoints;
+	}
+	
+	private void addActionListenerAndSetMainFrame(MainFrame mainFrame) {
+		this.mainFrame = mainFrame;
+		//Add action listeners
+		addPlayerBtn.addActionListener(new AddPlayerBtnListener(mainFrame,this,getGameEngine()));
+	}
+
+	@Override
+	public JButton makeComponentsAndReturnButton() {
 		this.playerId = new JTextField(10);
 		this.playerName = new JTextField(10);
 		this.initialPoints = new JTextField(10);
 		this.addPlayerBtn = new JButton("Add Player");
 		
-		//Add action listeners
-		addPlayerBtn.addActionListener(new AddPlayerBtnListener(this,gameEngine));
-		
+		return addPlayerBtn;
+	}
+	
+	@Override 
+	public void setUpGridBag(JButton button) {
 		GridBagConstraints gc = new GridBagConstraints();
-
-		// Note the properties set carry to the next cells, but we just re-state it to
-		// make it clear.
 
 		/////////////// First row///////////////
 
@@ -103,21 +109,7 @@ public class AddPlayerForm extends JPanel {
 
 		gc.gridx = 1;
 		gc.anchor = GridBagConstraints.FIRST_LINE_START;
-		add(addPlayerBtn, gc);
+		add(button, gc);
 	}
-
-	public JTextField getPlayerId() {
-		return playerId;
-	}
-
-	public JTextField getPlayerName() {
-		return playerName;
-	}
-
-	public JTextField getInitialPoints() {
-		return initialPoints;
-	}
-	
-
 
 }

@@ -23,6 +23,6 @@ public class RemovePlayerBtnListener implements ActionListener{
 		String playerId = nameAndId[1].trim();
 
 		gameEngine.removePlayer(new SimplePlayer(playerId, null, 0));
-		removePlayerForm.setPlayers(gameEngine.getAllPlayers());
+		removePlayerForm.setPlayers(gameEngine.getAllPlayers(),removePlayerForm.getRemovePlayerBtn());
 		}
 }

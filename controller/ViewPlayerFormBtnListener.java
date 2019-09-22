@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import model.interfaces.GameEngine;
 import view.MainFrame;
+import view.ViewPlayerForm;
 
 public class ViewPlayerFormBtnListener implements ActionListener{
 	
@@ -20,9 +21,10 @@ public class ViewPlayerFormBtnListener implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		mainFrame.hideForms();
-		mainFrame.getViewPlayerPanel().setPlayers(gameEngine.getAllPlayers());
-		mainFrame.add(mainFrame.getViewPlayerPanel(), BorderLayout.WEST);
-		mainFrame.getViewPlayerPanel().setVisible(true);
+		ViewPlayerForm viewPlayerForm = mainFrame.getViewPlayerForm();
+		viewPlayerForm.setPlayers(gameEngine.getAllPlayers(),viewPlayerForm.getViewPlayerBtn());
+		mainFrame.add(mainFrame.getViewPlayerForm(), BorderLayout.WEST);
+		mainFrame.getViewPlayerForm().setVisible(true);
 
 	}
 

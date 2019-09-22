@@ -20,8 +20,7 @@ public class GameEngineCallbackGUI implements GameEngineCallback{
 		System.out.println(String.format("%s coin %d flipped to %s", player.getPlayerName(),coin.getNumber()
 				,Utilities.titleConvert(coin.getFace())));
 		CoinPanel coinPanel = mainFrame.getCoinPanel();
-		SpinPlayerForm spinPanel = mainFrame.getSpinPlayerForm();
-		coinPanel.update(coin);
+		coinPanel.update(coin, coin.getNumber());
 	}
 
 	@Override

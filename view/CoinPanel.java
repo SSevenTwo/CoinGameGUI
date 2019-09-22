@@ -5,6 +5,7 @@ import java.awt.GridBagLayout;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import model.enumeration.CoinFace;
@@ -13,155 +14,122 @@ import model.interfaces.Player;
 
 public class CoinPanel extends JPanel {
 
-	private JLabel coin1Heads;
-	private JLabel coin1Tails;
-	private JLabel coin2Heads;
-	private JLabel coin2Tails;
+	private JLabel coin1;
+	private JLabel coin2;
 	private GridBagConstraints gc;
-
-	private int spinCount;
+	ImageIcon heads;
+	ImageIcon tails;
 
 	public CoinPanel() {
-		this.spinCount = 1;
-		this.coin1Heads = new JLabel();
-		this.coin1Tails = new JLabel();
-		this.coin2Heads = new JLabel();
-		this.coin2Tails = new JLabel();
-
-		ImageIcon heads = new ImageIcon("img/heads.png");
-		ImageIcon tails = new ImageIcon("img/tails.png");
-		coin1Heads.setIcon(heads);
-		coin1Tails.setIcon(tails);
-		coin2Heads.setIcon(heads);
-		coin2Tails.setIcon(tails);
-
-		setLayout(new GridBagLayout());
-		gc = new GridBagConstraints();
-		gc.fill = GridBagConstraints.NONE;
-		gc.gridy = 0;
-		gc.gridx = 0;
-		add(coin1Heads);
-		gc.gridy = 0;
-		gc.gridx = 1;
-		add(coin2Heads);
+		makeComponents();
+		setUpGridBag();
 	}
 
-	public void update(Coin coin1) {
-		if (this.isCoinOne(this.spinCount) == true) {
-			this.hideCoinOne();
-			this.removeCoinOne();
-			if (coin1.getFace().equals(CoinFace.HEADS)) {
-				gc.gridy = 0;
-				gc.gridx = 0;
-				add(coin1Heads);
-				coin1Heads.setVisible(true);
-			} else {
-				this.hideCoinOne();
-				this.removeCoinOne();
-				gc.gridy = 0;
-				gc.gridx = 0;
-				coin1Tails.setVisible(true);
-				add(coin1Tails);
-			}
+	public void update(Coin coin, int coinNumber) {
+		displayAllCoins();
+		if (coinNumber == 1) {
+			setCoin1Face(coin);
 		} else {
-			if (coin1.getFace().equals(CoinFace.HEADS)) {
-				this.hideCoinTwo();
-				this.removeCoinTwo();
-				gc.gridy = 0;
-				gc.gridx = 1;
-				add(coin2Heads);
-				coin2Heads.setVisible(true);
-			} else {
-				this.hideCoinTwo();
-				this.removeCoinTwo();
-				gc.gridy = 0;
-				gc.gridx = 1;
-				coin2Tails.setVisible(true);
-				add(coin2Tails);
-			}
+			setCoin2Face(coin);
 		}
-		this.spinCount++;
-		this.resetSpinCount();
 		revalidate();
 		repaint();
 	}
 
 	public void update(Player player) {
-		this.removeAllCoins();
-		this.hideCoins();
 		if (player.getResult() != null) {
-			if (player.getResult().getCoin1().getFace().equals(CoinFace.HEADS)) {
-				gc.gridy = 0;
-				gc.gridx = 0;
-				add(coin1Heads);
-				coin1Heads.setVisible(true);
-			} else {
-				gc.gridy = 0;
-				gc.gridx = 0;
-				coin1Tails.setVisible(true);
-				add(coin1Tails);
-			}
-
-			if (player.getResult().getCoin2().getFace().equals(CoinFace.HEADS)) {
-				gc.gridy = 0;
-				gc.gridx = 1;
-				add(coin2Heads);
-				coin2Heads.setVisible(true);
-			} else {
-				gc.gridy = 0;
-				gc.gridx = 1;
-				coin2Tails.setVisible(true);
-				add(coin2Tails);
-			}
+			displayAllCoins();
+			setPlayerCoin1(player);
+			setPlayerCoin2(player);
+		} else {
+			hideAllCoins();
+			JOptionPane.showMessageDialog(this, "Player has not spun yet!", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		revalidate();
 		repaint();
 	}
 
-	public void hideCoins() {
-		coin1Heads.setVisible(false);
-		coin1Tails.setVisible(false);
-		coin2Heads.setVisible(false);
-		coin2Tails.setVisible(false);
+	private void hideAllCoins() {
+		coin1.setVisible(false);
+		coin2.setVisible(false);
 	}
 
-	public void hideCoinOne() {
-		coin1Heads.setVisible(false);
-		coin1Tails.setVisible(false);
+	private void displayAllCoins() {
+		coin1.setVisible(true);
+		coin2.setVisible(true);
 	}
 
-	public void hideCoinTwo() {
-		coin2Heads.setVisible(false);
-		coin2Tails.setVisible(false);
+	private void makeComponents() {
+		this.coin1 = new JLabel();
+		this.coin2 = new JLabel();
+		this.heads = new ImageIcon("img/heads.png");
+		this.tails = new ImageIcon("img/tails.png");
+		coin1.setIcon(heads);
+		coin2.setIcon(tails);
 	}
 
-	public void removeAllCoins() {
-		remove(coin1Heads);
-		remove(coin1Tails);
-		remove(coin2Heads);
-		remove(coin2Tails);
+	private void setUpGridBag() {
+		setLayout(new GridBagLayout());
+		gc = new GridBagConstraints();
+		gc.fill = GridBagConstraints.NONE;
+		gc.gridy = 0;
+		gc.gridx = 0;
+		add(coin1);
+		gc.gridy = 0;
+		gc.gridx = 1;
+		add(coin2);
 	}
 
-	public void removeCoinOne() {
-		remove(coin1Heads);
-		remove(coin1Tails);
-	}
-
-	public void removeCoinTwo() {
-		remove(coin2Heads);
-		remove(coin2Tails);
-	}
-
-	public boolean isCoinOne(int spinCount) {
-		if (spinCount % 2 != 0) {
+	private boolean coinFaceIsHeads(Coin coin) {
+		if (coin.getFace().equals(CoinFace.HEADS)) {
 			return true;
-		}
-		return false;
+		} else
+			return false;
 	}
 
-	private void resetSpinCount() {
-		if (this.spinCount == 9) {
-			this.spinCount = 1;
+	private boolean playerCoin1IsHeads(Player player) {
+		if (player.getResult().getCoin1().getFace().equals(CoinFace.HEADS)) {
+			return true;
+		} else
+			return false;
+	}
+
+	private boolean playerCoin2IsHeads(Player player) {
+		if (player.getResult().getCoin2().getFace().equals(CoinFace.HEADS)) {
+			return true;
+		} else
+			return false;
+	}
+
+	private void setCoin1Face(Coin coin) {
+		if (coinFaceIsHeads(coin)) {
+			coin1.setIcon(heads);
+		} else {
+			coin1.setIcon(tails);
+		}
+	}
+
+	private void setCoin2Face(Coin coin) {
+		if (coinFaceIsHeads(coin)) {
+			coin2.setIcon(heads);
+		} else {
+			coin2.setIcon(tails);
+		}
+	}
+
+	private void setPlayerCoin1(Player player) {
+		if (playerCoin1IsHeads(player)) {
+			coin1.setIcon(heads);
+		} else {
+			coin1.setIcon(tails);
+		}
+	}
+
+	private void setPlayerCoin2(Player player) {
+		if (playerCoin2IsHeads(player)) {
+			coin2.setIcon(heads);
+		} else {
+			coin2.setIcon(tails);
 		}
 	}
 }

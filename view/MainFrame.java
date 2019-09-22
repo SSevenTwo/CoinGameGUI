@@ -20,30 +20,16 @@ public class MainFrame extends JFrame {
 	private RemovePlayerForm removePlayerForm;
 	private SpinPlayerForm spinPlayerForm;
 	private CoinPanel coinPanel;
+	private SummaryPanel summaryPanel;
 
 	public MainFrame(GameEngine gameEngine) {
 		super("Coin Game");
 		setLayout(new BorderLayout());
-
-		// Connecting to controller
-		this.gameEngine = gameEngine;
-
-		// Making components
+		setModel(gameEngine);
 		createComponents();
-
-		// Add listeners
 		addToolbarListeners();
-
-		// Adding to layout
-		add(toolbar, BorderLayout.NORTH);
-		add(coinPanel, BorderLayout.CENTER);
-		add(addPlayerForm, BorderLayout.WEST);
-
-		// Set Minimum Size
-		setMinimumSize(new Dimension(600, 300));
-		setSize(1200, 600);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setVisible(true);
+		addComponentsToLayout();
+		setUpLayoutSettings();
 	}
 
 	public void hideForms() {
@@ -57,14 +43,16 @@ public class MainFrame extends JFrame {
 		toolbar = new Toolbar();
 		coinPanel = new CoinPanel();
 		viewPlayerForm = new ViewPlayerForm(gameEngine, coinPanel);
-		addPlayerForm = new AddPlayerForm(gameEngine);
+		addPlayerForm = new AddPlayerForm(this, gameEngine);
+		
 		if (PlayerListIsNotEmpty()) {
-			removePlayerForm = new RemovePlayerForm(gameEngine.getAllPlayers(), gameEngine);
-			spinPlayerForm = new SpinPlayerForm(gameEngine.getAllPlayers(), gameEngine);
+			createFormsWithPlayers();
 		} else {
-			removePlayerForm = new RemovePlayerForm(gameEngine);
-			spinPlayerForm = new SpinPlayerForm(gameEngine);
+			createPlayerlessForms();
 		}
+		
+		summaryPanel = new SummaryPanel(gameEngine);
+		summaryPanel.refreshTable();
 	}
 
 	private void addToolbarListeners() {
@@ -80,6 +68,34 @@ public class MainFrame extends JFrame {
 		}
 		else return false;
 	}
+	
+	private void addComponentsToLayout() {
+		add(toolbar, BorderLayout.NORTH);
+		add(coinPanel, BorderLayout.CENTER);
+		add(addPlayerForm, BorderLayout.WEST);
+		add(summaryPanel, BorderLayout.EAST);
+	}
+	
+	private void setUpLayoutSettings() {
+		setMinimumSize(new Dimension(600, 300));
+		setSize(1200, 600);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setVisible(true);
+	}
+	
+	private void setModel(GameEngine gameEngine) {
+		this.gameEngine = gameEngine;
+	}
+	
+	private void createPlayerlessForms() {
+		removePlayerForm = new RemovePlayerForm(gameEngine);
+		spinPlayerForm = new SpinPlayerForm(gameEngine);
+	}
+	
+	private void createFormsWithPlayers() {
+		removePlayerForm = new RemovePlayerForm(gameEngine.getAllPlayers(), gameEngine);
+		spinPlayerForm = new SpinPlayerForm(gameEngine.getAllPlayers(), gameEngine);
+	}
 
 	public CoinPanel getCoinPanel() {
 		return coinPanel;
@@ -89,7 +105,7 @@ public class MainFrame extends JFrame {
 		return spinPlayerForm;
 	}
 
-	public ViewPlayerForm getViewPlayerPanel() {
+	public ViewPlayerForm getViewPlayerForm() {
 		return viewPlayerForm;
 	}
 
@@ -100,5 +116,11 @@ public class MainFrame extends JFrame {
 	public RemovePlayerForm getRemovePlayerForm() {
 		return removePlayerForm;
 	}
+
+	public SummaryPanel getSummaryPanel() {
+		return summaryPanel;
+	}
+	
+	
 
 }

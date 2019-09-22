@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import model.interfaces.GameEngine;
 import view.MainFrame;
 
 public class AddPlayerFormBtnListener implements ActionListener{

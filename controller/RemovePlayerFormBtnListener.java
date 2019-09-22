@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import model.interfaces.GameEngine;
 import view.MainFrame;
+import view.RemovePlayerForm;
 
 public class RemovePlayerFormBtnListener implements ActionListener{
 	private MainFrame mainFrame;
@@ -19,7 +20,8 @@ public class RemovePlayerFormBtnListener implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		mainFrame.hideForms();
-		mainFrame.getRemovePlayerForm().setPlayers(gameEngine.getAllPlayers());
+		RemovePlayerForm removePlayeForm = mainFrame.getRemovePlayerForm();
+		removePlayeForm.setPlayers(gameEngine.getAllPlayers(),removePlayeForm.getRemovePlayerBtn());
 		mainFrame.add(mainFrame.getRemovePlayerForm(), BorderLayout.WEST);
 		mainFrame.getRemovePlayerForm().setVisible(true);
 
