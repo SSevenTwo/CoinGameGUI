@@ -72,7 +72,6 @@ public abstract class GuiForm extends JPanel {
 	private void addPlayersToComboBox() {
 		DefaultComboBoxModel<String> combo = new DefaultComboBoxModel<String>();
 		for (Player player : players) {
-			System.out.println(player);
 			combo.addElement(String.format("%s : %s", player.getPlayerName(), player.getPlayerId()));
 			this.playerList.setModel(combo);
 		}
@@ -100,7 +99,7 @@ public abstract class GuiForm extends JPanel {
 
 	private void setSize() {
 		Rectangle r = this.getBounds();
-		setPreferredSize(new Dimension(200, (int) r.getHeight()));
+		setPreferredSize(new Dimension(220, (int) r.getHeight()));
 	}
 
 	private void setUpPlayerList() {

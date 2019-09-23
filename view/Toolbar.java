@@ -1,8 +1,11 @@
 package view;
 
+import java.awt.Color;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JToolBar;
+import javax.swing.border.MatteBorder;
 
 
 public class Toolbar extends JToolBar{
@@ -24,6 +27,9 @@ public class Toolbar extends JToolBar{
 		add(this.addPlayerBtn);
 		add(this.removePlayerBtn);
 		add(this.spinPlayerBtn);
+		
+		setBorder(new MatteBorder(1, 0, 1, 0, Color.GRAY));
+		setFloatable(false);
 	}
 
 	public JButton getAddPlayerBtn() {

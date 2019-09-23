@@ -8,37 +8,42 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.DocumentFilter;
 
 import controller.BetAmountListener;
 import controller.SpinPlayerBtnListener;
-import model.interfaces.GameEngine;
 import model.interfaces.Player;
+import util.TextFilter;
 import view.interfaces.GuiForm;
 
 public class SpinPlayerForm extends GuiForm {
+	private MainFrame mainFrame;
 	private JButton spinPlayerBtn;
 	private JComboBox<String> betTypes;
 	private JTextField betAmount;
 
 	private boolean isSpinning;
 
-	public SpinPlayerForm(GameEngine gameEngine) {
-		super(null, gameEngine, "Spin Player: ");
+	public SpinPlayerForm(MainFrame mainFrame) {
+		super(null, mainFrame.getGameEngine(), "Spin Player: ");
+		setMainFrame(mainFrame);
+		addActionListenerToSpinBtn();
 	}
 
-	public SpinPlayerForm(Collection<Player> players, GameEngine gameEngine) {
-		super(players, gameEngine, "Spin Player: ");
+	public SpinPlayerForm(Collection<Player> players, MainFrame mainFrame) {
+		super(players, mainFrame.getGameEngine(), "Spin Player: ");
+		setMainFrame(mainFrame);
+		addActionListenerToSpinBtn();
 	}
 
 	@Override
 	public void updateButtonState(JButton button) {
-		// Enables or disables the button depending on whether the system is spinning or not.
-		if(isSpinning) {
-			betAmount.setEnabled(false);
+		if (isSpinning) {
+			button.setEnabled(false);
 		}
-		if (isSpinningOrPlayerListIsEmpty()) {
+		else if (isSpinningOrPlayerListIsEmpty()) {
 			button.setEnabled(false);
 		} else {
 			betAmount.setEnabled(true);
@@ -57,16 +62,24 @@ public class SpinPlayerForm extends GuiForm {
 	public void setSpinning(boolean isSpinning) {
 		this.isSpinning = isSpinning;
 	}
-	
+
 	public boolean checkIfAmountEmpty() {
-		if(betAmount.getText().equals("")) {
+		if (betAmount.getText().equals("")) {
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
-	
+
+	private void addActionListenerToSpinBtn() {
+		SpinPlayerBtnListener listener = new SpinPlayerBtnListener(this, mainFrame, betTypes, betAmount);
+		spinPlayerBtn.addActionListener(listener);
+	}
+
+	private void setMainFrame(MainFrame mainFrame) {
+		this.mainFrame = mainFrame;
+	}
+
 	@Override
 	public JButton makeComponentsAndReturnButton() {
 		spinPlayerBtn = new JButton("Spin Player");
@@ -74,28 +87,27 @@ public class SpinPlayerForm extends GuiForm {
 		setUpBetTypesComboBox();
 		betAmount = new JTextField(10);
 		betAmount.getDocument().addDocumentListener(new BetAmountListener(this));
-
-//		// Add action listeners
-		SpinPlayerBtnListener listener = new SpinPlayerBtnListener(this,getGameEngine(),betTypes,betAmount);
-		spinPlayerBtn.addActionListener(listener);
+		
+		DocumentFilter numberFilter = new TextFilter(mainFrame);
+		((AbstractDocument)betAmount.getDocument()).setDocumentFilter(numberFilter);
+		
 		return spinPlayerBtn;
 	}
-	
-	@Override 
+
+	@Override
 	public void setUpGridBag(JButton button) {
 		setGc(new GridBagConstraints());
 		GridBagConstraints gc = getGc();
 
 		/////////////// First row///////////////
 
-		// Set the ratio of x and y cells
 		gc.weightx = 1;
-		gc.weighty = 0.01; 
+		gc.weighty = 0.01;
 
-		gc.gridy = 0; 
+		gc.gridy = 0;
 		gc.gridx = 0;
-		
-		gc.fill = GridBagConstraints.NONE; 
+
+		gc.fill = GridBagConstraints.NONE;
 		gc.anchor = GridBagConstraints.FIRST_LINE_START;
 		gc.insets = new Insets(10, 0, 0, 0);
 		add(new JLabel("Player: "), gc);
@@ -111,11 +123,11 @@ public class SpinPlayerForm extends GuiForm {
 		gc.gridx = 0;
 		gc.anchor = GridBagConstraints.FIRST_LINE_START;
 		add(new JLabel("Bet Type: "), gc);
-		
+
 		/////////////// Next row///////////////
 		gc.gridy++;
 		gc.weighty = 0.01;
-		
+
 		gc.gridx = 0;
 		gc.anchor = GridBagConstraints.FIRST_LINE_START;
 		add(betTypes, gc);
@@ -124,11 +136,11 @@ public class SpinPlayerForm extends GuiForm {
 		gc.gridy++;
 		gc.weightx = 0.01;
 		gc.weighty = 0.01;
-		
+
 		gc.gridx = 0;
 		gc.anchor = GridBagConstraints.FIRST_LINE_START;
 		add(new JLabel("Bet Amount:"), gc);
-		
+
 		/////////////// Next row///////////////
 		gc.gridy++;
 		gc.gridx = 0;
@@ -144,22 +156,32 @@ public class SpinPlayerForm extends GuiForm {
 		gc.anchor = GridBagConstraints.FIRST_LINE_START;
 		add(button, gc);
 	}
-	
+
 	private void setUpBetTypesComboBox() {
 		DefaultComboBoxModel<String> combo = new DefaultComboBoxModel<String>();
+		combo.addElement("No Bet");
 		combo.addElement("Coin 1");
 		combo.addElement("Coin 2");
 		combo.addElement("Both");
 		betTypes = new JComboBox<String>();
 		betTypes.setModel(combo);
 	}
-	
+
 	private boolean isSpinningOrPlayerListIsEmpty() {
+		if (isPlayerListEmptyOrIsSpinningOrIfAmountEmpty()) {
+			return true;
+		} else
+			return false;
+	}
+	
+	private boolean isPlayerListEmptyOrIsSpinningOrIfAmountEmpty() {
 		if(getPlayers().size() == 0 || getPlayers() == null || this.isSpinning == true
 				|| checkIfAmountEmpty() == true) {
 			return true;
 		}
 		else return false;
 	}
+	
+
 
 }

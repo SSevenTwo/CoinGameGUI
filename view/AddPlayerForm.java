@@ -6,9 +6,12 @@ import java.awt.Insets;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.DocumentFilter;
 
 import controller.AddPlayerBtnListener;
 import model.interfaces.GameEngine;
+import util.TextFilter;
 import view.interfaces.GuiForm;
 
 public class AddPlayerForm extends GuiForm {
@@ -49,6 +52,9 @@ public class AddPlayerForm extends GuiForm {
 		this.playerName = new JTextField(10);
 		this.initialPoints = new JTextField(10);
 		this.addPlayerBtn = new JButton("Add Player");
+		
+		DocumentFilter numberFilter = new TextFilter(mainFrame);
+		((AbstractDocument)initialPoints.getDocument()).setDocumentFilter(numberFilter);
 		
 		return addPlayerBtn;
 	}

@@ -11,11 +11,15 @@ import model.interfaces.Player;
 public class SummaryTableModel extends AbstractTableModel{
 
 	private List<Player> players;
-	private String[] colNames = {"ID","Name","Points","Bet Type","Bet Amnt.",
+	private String[] colNames = {"ID","Name","Pts.","B.Type","Bet",
 			"Result"
 	};
 	
 	public SummaryTableModel(Collection<Player> players) {
+		this.players = (List<Player>) players;
+	}
+	
+	public void updatePlayers(Collection<Player> players) {
 		this.players = (List<Player>) players;
 	}
 

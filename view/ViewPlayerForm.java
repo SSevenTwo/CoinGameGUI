@@ -1,37 +1,30 @@
 package view;
 
-import java.awt.GridBagConstraints;
 import java.util.Collection;
 
 import javax.swing.JButton;
 
 import controller.ViewPlayerBtnListener;
-import model.interfaces.GameEngine;
 import model.interfaces.Player;
 import view.interfaces.GuiForm;
 
 public class ViewPlayerForm extends GuiForm {
 	private JButton viewPlayerBtn;
-	private CoinPanel coinPanel;
 
-	private GridBagConstraints gc;
-
-	public ViewPlayerForm(GameEngine gameEngine, CoinPanel coinPanel) {
-		super(null, gameEngine, "View Player:");
-		this.coinPanel = coinPanel;
-		addActionListenerToViewBtn();
+	public ViewPlayerForm(MainFrame mainFrame, CoinPanel coinPanel) {
+		super(null, mainFrame.getGameEngine(), "View Player:");
+		addActionListenerToViewBtn(mainFrame);
 	}
 
-	public ViewPlayerForm(Collection<Player> players, GameEngine gameEngine, CoinPanel coinPanel) {
-		super(players, gameEngine, "View Player:");
-		this.coinPanel = coinPanel;
-		addActionListenerToViewBtn();
+	public ViewPlayerForm(Collection<Player> players, MainFrame mainFrame) {
+		super(players, mainFrame.getGameEngine(), "View Player:");
+		addActionListenerToViewBtn(mainFrame);
 	}
 
 	public JButton getViewPlayerBtn() {
 		return viewPlayerBtn;
 	}
-
+	
 	@Override
 	public JButton makeComponentsAndReturnButton() {
 		this.viewPlayerBtn = new JButton("View");
@@ -39,8 +32,8 @@ public class ViewPlayerForm extends GuiForm {
 		return viewPlayerBtn;
 	}
 
-	private void addActionListenerToViewBtn() {
-		viewPlayerBtn.addActionListener(new ViewPlayerBtnListener(this, getGameEngine(), this.coinPanel));
+	private void addActionListenerToViewBtn(MainFrame mainFrame) {
+		viewPlayerBtn.addActionListener(new ViewPlayerBtnListener(mainFrame, this));
 	}
 
 }

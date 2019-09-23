@@ -5,9 +5,9 @@ import java.awt.event.ActionListener;
 
 import model.SimplePlayer;
 import model.interfaces.GameEngine;
-import model.interfaces.Player;
 import view.AddPlayerForm;
 import view.MainFrame;
+import view.StatusBar;
 
 public class AddPlayerBtnListener implements ActionListener {
 	
@@ -23,7 +23,6 @@ public class AddPlayerBtnListener implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
 		
 		String newPlayerId = addPlayerForm.getPlayerId().getText();
 		String newPlayerName = addPlayerForm.getPlayerName().getText();
@@ -31,13 +30,11 @@ public class AddPlayerBtnListener implements ActionListener {
 		
 		gameEngine.addPlayer(new SimplePlayer(newPlayerId, newPlayerName, newPlayerPoints));
 		
-		System.out.println("Person Added.");
+		StatusBar statusBar = mainFrame.getStatusBar();
+		statusBar.updateSystemStatus("Idle");
+		statusBar.updateLastAction("Added Player");
 		
-		mainFrame.getSummaryPanel().refreshTable();
-		for (Player player : gameEngine.getAllPlayers()) {
-			System.out.println(player.getPlayerName());
-		}
-
+		mainFrame.getSummaryPanel().refreshSummary();
 	}
 
 }
