@@ -115,12 +115,13 @@ public class SummaryPanel extends JPanel {
 		JOptionPane.showMessageDialog(mainFrame, "Spin to play again!", "Finished", JOptionPane.INFORMATION_MESSAGE);
 		resetAllPlayers();
 		updatePlayerList();
+		mainFrame.getToolbar().updateButtonState();
 		
 	}
 	
 	private void resetAllPlayers() {
 		for(Player player: gameEngine.getAllPlayers()) {
-			gameEngine.placeBet(player, 0, BetType.NO_BET);
+			gameEngine.placeBet(player, 0, null);
 		}
 	}
 

@@ -17,10 +17,12 @@ public class CoinPanel extends JPanel {
 	private JLabel coin1;
 	private JLabel coin2;
 	private GridBagConstraints gc;
-	ImageIcon heads;
-	ImageIcon tails;
+	private ImageIcon heads;
+	private ImageIcon tails;
+	private MainFrame mainFrame;
 
-	public CoinPanel() {
+	public CoinPanel(MainFrame mainFrame) {
+		this.mainFrame = mainFrame;
 		makeComponents();
 		setUpGridBag();
 	}
@@ -43,7 +45,7 @@ public class CoinPanel extends JPanel {
 			setPlayerCoin2(player);
 		} else {
 			hideAllCoins();
-			JOptionPane.showMessageDialog(this, "Player has not spun yet!", "Error", JOptionPane.ERROR_MESSAGE);
+//			JOptionPane.showMessageDialog(mainFrame, "Player has not spun yet. No coins to display.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		revalidate();
 		repaint();

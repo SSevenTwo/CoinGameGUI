@@ -49,9 +49,9 @@ public class Driver {
 
 			public void run() {
 				GameEngineCallbackGUI game = new GameEngineCallbackGUI(gameEngine);
-				//GameEngineCallbackImpl game1 = new GameEngineCallbackImpl();
+				GameEngineCallbackImpl game1 = new GameEngineCallbackImpl();
 				gameEngine.addGameEngineCallback(game);
-				//gameEngine.addGameEngineCallback(game1);
+				gameEngine.addGameEngineCallback(game1);
 
 			}
 

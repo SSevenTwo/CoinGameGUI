@@ -14,13 +14,15 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 
 import controller.AddPlayerFormBtnListener;
+import controller.PlayerListListener;
+import controller.RemoveBetBtnListener;
 import controller.RemovePlayerFormBtnListener;
 import controller.SpinPlayerFormBtnListener;
-import controller.ViewPlayerFormBtnListener;
+import controller.SpinSpinnerBtnListener;
+import controller.PlaceBetBtnListener;
 import model.interfaces.GameEngine;
 import model.interfaces.Player;
 
@@ -28,10 +30,6 @@ public class MainFrame extends JFrame {
 
 	private GameEngine gameEngine;
 	private Toolbar toolbar;
-	private ViewPlayerForm viewPlayerForm;
-	private AddPlayerForm addPlayerForm;
-	private RemovePlayerForm removePlayerForm;
-	private SpinPlayerForm spinPlayerForm;
 	private CoinPanel coinPanel;
 	private CoinPanel playerCoinPanel;
 	private SummaryPanel summaryPanel;
@@ -43,43 +41,39 @@ public class MainFrame extends JFrame {
 		setLayout(new BorderLayout());
 		setModel(gameEngine);
 		createComponents();
-		setMenuBar();
 		addToolbarListeners();
+		setMenuBar();
 		addComponentsToLayout();
 		setUpLayoutSettings();
 	}
-
-	public void hideForms() {
-		addPlayerForm.setVisible(false);
-		removePlayerForm.setVisible(false);
-		spinPlayerForm.setVisible(false);
-		viewPlayerForm.setVisible(false);
+	
+	private void addToolbarListeners() {
+		toolbar.getAddPlayerBtn().addActionListener(new AddPlayerFormBtnListener(this));
+		toolbar.getRemovePlayerBtn().addActionListener(new RemovePlayerFormBtnListener(this));
+		toolbar.getPlaceBetBtn().addActionListener(new PlaceBetBtnListener(this));
+		toolbar.getRemoveBetBtn().addActionListener(new RemoveBetBtnListener(this));
+		toolbar.getSpinPlayerBtn().addActionListener(new SpinPlayerFormBtnListener(this));
+		toolbar.getPlayerList().addActionListener(new PlayerListListener(this));
+		toolbar.getSpinSpinnerBtn().addActionListener(new SpinSpinnerBtnListener(this));
 	}
 
 	private void createComponents() {
-		toolbar = new Toolbar();
-		coinPanel = new CoinPanel();
-		playerCoinPanel = new CoinPanel();
+		
+		coinPanel = new CoinPanel(this);
+		playerCoinPanel = new CoinPanel(this);
 		playerCoinPanel.setVisible(false);
-		viewPlayerForm = new ViewPlayerForm(this, coinPanel);
-		addPlayerForm = new AddPlayerForm(this, gameEngine);
 		playersWhoHaveSpun = new ArrayList<Player>();
 
 		if (PlayerListIsNotEmpty()) {
-			createFormsWithPlayers();
+			toolbar = new Toolbar(gameEngine.getAllPlayers(),this);
+			toolbar.updateButtonState();
 		} else {
-			createPlayerlessForms();
+			toolbar = new Toolbar(this);
+			toolbar.updateButtonState();
 		}
 
 		summaryPanel = new SummaryPanel(this);
 		statusBar = new StatusBar(this);
-	}
-
-	private void addToolbarListeners() {
-		toolbar.getAddPlayerBtn().addActionListener(new AddPlayerFormBtnListener(this));
-		toolbar.getRemovePlayerBtn().addActionListener(new RemovePlayerFormBtnListener(this, gameEngine));
-		toolbar.getSpinPlayerBtn().addActionListener(new SpinPlayerFormBtnListener(this, gameEngine));
-		toolbar.getViewPlayerBtn().addActionListener(new ViewPlayerFormBtnListener(this, gameEngine));
 	}
 
 	private boolean PlayerListIsNotEmpty() {
@@ -92,8 +86,7 @@ public class MainFrame extends JFrame {
 	private void addComponentsToLayout() {
 		add(toolbar, BorderLayout.NORTH);
 		add(coinPanel, BorderLayout.CENTER);
-		add(addPlayerForm, BorderLayout.WEST);
-		add(summaryPanel, BorderLayout.EAST);
+		add(summaryPanel, BorderLayout.WEST);
 		add(statusBar, BorderLayout.SOUTH);
 	}
 
@@ -108,35 +101,10 @@ public class MainFrame extends JFrame {
 		this.gameEngine = gameEngine;
 	}
 
-	private void createPlayerlessForms() {
-		removePlayerForm = new RemovePlayerForm(this);
-		spinPlayerForm = new SpinPlayerForm(this);
-	}
-
-	private void createFormsWithPlayers() {
-		removePlayerForm = new RemovePlayerForm(gameEngine.getAllPlayers(), this);
-		spinPlayerForm = new SpinPlayerForm(gameEngine.getAllPlayers(), this);
-	}
-
 	public CoinPanel getCoinPanel() {
 		return coinPanel;
 	}
 
-	public SpinPlayerForm getSpinPlayerForm() {
-		return spinPlayerForm;
-	}
-
-	public ViewPlayerForm getViewPlayerForm() {
-		return viewPlayerForm;
-	}
-
-	public AddPlayerForm getAddPlayerForm() {
-		return addPlayerForm;
-	}
-
-	public RemovePlayerForm getRemovePlayerForm() {
-		return removePlayerForm;
-	}
 
 	public SummaryPanel getSummaryPanel() {
 		return summaryPanel;
@@ -152,6 +120,10 @@ public class MainFrame extends JFrame {
 
 	public StatusBar getStatusBar() {
 		return statusBar;
+	}
+
+	public Toolbar getToolbar() {
+		return toolbar;
 	}
 
 	public Collection<Player> getPlayersWhoHaveSpun() {
@@ -210,10 +182,7 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JCheckBoxMenuItem button = (JCheckBoxMenuItem) e.getSource();
-				addPlayerForm.setVisible(button.isSelected());
-				viewPlayerForm.setVisible(button.isSelected());
-				removePlayerForm.setVisible(button.isSelected());
-				spinPlayerForm.setVisible(button.isSelected());
+				summaryPanel.setVisible(button.isSelected());
 			}
 		});
 
