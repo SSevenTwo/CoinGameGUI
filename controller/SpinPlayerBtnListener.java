@@ -13,13 +13,13 @@ import view.PlayerWrapper;
 import view.StatusBar;
 import view.Toolbar;
 
-public class SpinPlayerFormBtnListener implements ActionListener {
+public class SpinPlayerBtnListener implements ActionListener {
 	private MainFrame mainFrame;
 	private GameEngine gameEngine;
 	private StatusBar statusBar;
 	private Toolbar toolbar;
 	
-	public SpinPlayerFormBtnListener(MainFrame mainFrame) {
+	public SpinPlayerBtnListener(MainFrame mainFrame) {
 		this.mainFrame = mainFrame;
 		this.gameEngine = mainFrame.getGameEngine();
 		this.toolbar = mainFrame.getToolbar();
@@ -28,11 +28,6 @@ public class SpinPlayerFormBtnListener implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-//		mainFrame.hideForms();
-//		SpinPlayerForm spinPlayerForm = mainFrame.getSpinPlayerForm();
-//		spinPlayerForm.setPlayers(gameEngine.getAllPlayers(),spinPlayerForm.getSpinPlayerBtn());
-//		mainFrame.add(mainFrame.getSpinPlayerForm(), BorderLayout.WEST);
-//		mainFrame.getSpinPlayerForm().setVisible(true);
 		mainFrame.getPlayerCoinPanel().setVisible(false);
 		mainFrame.add(mainFrame.getCoinPanel(), BorderLayout.CENTER);
 		mainFrame.getCoinPanel().setVisible(true);
@@ -79,6 +74,7 @@ public class SpinPlayerFormBtnListener implements ActionListener {
 		gameEngine.spinSpinner(100, 1000, 100, 50, 500, 50);
 		mainFrame.getPlayersWhoHaveSpun().clear();
 		mainFrame.getToolbar().getPlayersWhoHaveBet().clear();
+		removePlayerIfNegativePoints();
 	}
 
 	public void spinSpinnerIfReady() {
@@ -88,6 +84,20 @@ public class SpinPlayerFormBtnListener implements ActionListener {
 			spinSpinner();
 			statusBar.updateSystemStatus("Idle");
 		}
+	}
+	
+	private void removePlayerIfNegativePoints() {
+		for(Player player: gameEngine.getAllPlayers()) {
+			if(player.getPoints()<=0) {
+				gameEngine.removePlayer(player);
+			}
+		}
+		updateSummaryPanelAndToolbar();
+	}
+	
+	private void updateSummaryPanelAndToolbar() {
+		mainFrame.getToolbar().setPlayers(gameEngine.getAllPlayers());
+		mainFrame.getSummaryPanel().refreshSummary();
 	}
 
 }

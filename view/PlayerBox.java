@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import model.enumeration.BetType;
 import model.interfaces.CoinPair;
 import model.interfaces.Player;
-
+@SuppressWarnings("serial")
 public class PlayerBox extends JPanel {
 	private String id;
 	private String name;
@@ -30,7 +30,7 @@ public class PlayerBox extends JPanel {
 		setLayout(new GridBagLayout());
 		setInstanceVariables(player, playerWin);
 		determineWinOrLoss();
-		setPreferredSize(new Dimension(280, 100));
+		setPreferredSize(new Dimension(230, 100));
 		setSize(getPreferredSize());
 		setUpGridBag();
 	}
@@ -77,7 +77,7 @@ public class PlayerBox extends JPanel {
 		gc.gridy = 0;
 		gc.gridx = 0;
 		gc.anchor = GridBagConstraints.FIRST_LINE_START;
-		add(new JLabel("<html>" + name + "<font color=" + colour + "> " + status + "</font></html>"), gc);
+		add(new JLabel("<html>" + name + " : " + id + "<font color=" + colour + "> " + status + "</font></html>"), gc);
 
 		/////////////// Next row///////////////
 		gc.gridy++;

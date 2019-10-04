@@ -7,16 +7,14 @@ import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.MatteBorder;
-
+@SuppressWarnings("serial")
 public class StatusBar extends JPanel{
 	
-	private MainFrame mainFrame;
 	private JLabel systemStatus;
 	private JLabel currentView;
 	private JLabel lastAction;
 	
-	public StatusBar(MainFrame mainFrame) {
-		this.mainFrame = mainFrame;
+	public StatusBar() {
 		systemStatus = new JLabel("System: Idle");
 		currentView = new JLabel("Current Player Viewing: No one");
 		lastAction = new JLabel("Last Action: N/A");

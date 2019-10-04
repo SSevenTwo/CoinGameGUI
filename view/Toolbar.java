@@ -3,6 +3,7 @@ package view;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -17,9 +18,9 @@ import model.enumeration.BetType;
 import model.interfaces.GameEngine;
 import model.interfaces.Player;
 
+@SuppressWarnings("serial")
 public class Toolbar extends JToolBar {
 
-	private MainFrame mainFrame;
 	private GameEngine gameEngine;
 
 	private JButton viewPlayerBtn;
@@ -38,13 +39,16 @@ public class Toolbar extends JToolBar {
 
 	public Toolbar(MainFrame mainFrame) {
 		this(null, mainFrame);
-
 	}
 
 	public Toolbar(Collection<Player> players, MainFrame mainFrame) {
-		this.mainFrame = mainFrame;
 		this.gameEngine = mainFrame.getGameEngine();
 		this.players = players;
+		createComponents();
+		setUpGridBagAndAddComponents();
+	}
+
+	private void createComponents() {
 		this.playerList = new JComboBox<PlayerWrapper>();
 		this.addPlayerBtn = new JButton("Add Player");
 		this.removePlayerBtn = new JButton("Remove Player");
@@ -52,9 +56,22 @@ public class Toolbar extends JToolBar {
 		this.removeBetBtn = new JButton("Remove Bet");
 		this.spinPlayerBtn = new JButton("Spin Player");
 		this.spinSpinnerBtn = new JButton("Spin Spinner");
-		this.activePlayer = new JLabel("Current Active Player: ");
+		this.activePlayer = new JLabel("  Current Selected Player: ");
 		this.playersWhoHaveBet = new ArrayList<Player>();
+		
+		setMnemonics();
+	}
 
+	private void setMnemonics() {
+		addPlayerBtn.setMnemonic(KeyEvent.VK_A);
+		removePlayerBtn.setMnemonic(KeyEvent.VK_R);
+		placeBetBtn.setMnemonic(KeyEvent.VK_B);
+		removeBetBtn.setMnemonic(KeyEvent.VK_V);
+		spinPlayerBtn.setMnemonic(KeyEvent.VK_S);
+		spinSpinnerBtn.setMnemonic(KeyEvent.VK_P);
+	}
+
+	private void setUpGridBagAndAddComponents() {
 		setLayout(new GridBagLayout());
 		gc = new GridBagConstraints();
 		gc.weightx = 0.1;
@@ -92,7 +109,6 @@ public class Toolbar extends JToolBar {
 			gc.weightx = 1;
 			add(this.playerList, gc);
 		}
-
 		setBorder(new MatteBorder(1, 0, 1, 0, Color.GRAY));
 		setFloatable(false);
 	}
@@ -129,7 +145,6 @@ public class Toolbar extends JToolBar {
 	public void refreshComboBox() {
 		// Setup or refresh combo box upon removing players
 		remove(playerList);
-		this.playerList = new JComboBox<PlayerWrapper>();
 		addPlayersToComboBox();
 	}
 
@@ -140,13 +155,6 @@ public class Toolbar extends JToolBar {
 			combo.addElement(playerWrapper);
 		}
 		this.playerList.setModel(combo);
-	}
-
-	private boolean playerListIsEmpty() {
-		if (players.size() == 0 || players == null) {
-			return true;
-		} else
-			return false;
 	}
 
 	public JComboBox<PlayerWrapper> getPlayerList() {
@@ -165,30 +173,22 @@ public class Toolbar extends JToolBar {
 			spinSpinnerBtn.setEnabled(false);
 			return;
 		}
-		if (player != null && player.getBetType().equals(BetType.NO_BET)) {
+
+		if (playerIsNotNullAndHasNoBet(player)) {
 			spinPlayerBtn.setEnabled(false);
 			spinSpinnerBtn.setEnabled(true);
-		} 
-		
-//		if (isSpinningOrPlayerListIsEmpty()) {
-//			spinPlayerBtn.setEnabled(false);
-//			spinSpinnerBtn.setEnabled(false);
-//		} 
-		else {
+		} else {
 			spinPlayerBtn.setEnabled(true);
 			spinSpinnerBtn.setEnabled(true);
 		}
+
+		if (!checkIfSpinnerBtnIsReady()) {
+			spinSpinnerBtn.setEnabled(false);
+		}
 	}
 
-	private boolean isSpinningOrPlayerListIsEmpty() {
-		if (isPlayerListEmptyOrIsSpinningOrIfAmountEmpty()) {
-			return true;
-		} else
-			return false;
-	}
-
-	private boolean isPlayerListEmptyOrIsSpinningOrIfAmountEmpty() {
-		if (getPlayers().size() == 0 || getPlayers() == null || this.isSpinning == true) {
+	private boolean playerIsNotNullAndHasNoBet(Player player) {
+		if (player != null && player.getBetType().equals(BetType.NO_BET)) {
 			return true;
 		} else
 			return false;
@@ -212,6 +212,15 @@ public class Toolbar extends JToolBar {
 
 	public Collection<Player> getPlayersWhoHaveBet() {
 		return playersWhoHaveBet;
+	}
+
+	private boolean checkIfSpinnerBtnIsReady() {
+		for (Player player : gameEngine.getAllPlayers()) {
+			if (!player.getBetType().equals(BetType.NO_BET) && player.getResult() == null) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

@@ -12,13 +12,13 @@ import view.PlayerWrapper;
 import view.StatusBar;
 import view.Toolbar;
 
-public class RemovePlayerFormBtnListener implements ActionListener {
+public class RemovePlayerBtnListener implements ActionListener {
 	private MainFrame mainFrame;
 	private GameEngine gameEngine;
 	private StatusBar statusBar;
 	private Toolbar toolbar;
 
-	public RemovePlayerFormBtnListener(MainFrame mainFrame) {
+	public RemovePlayerBtnListener(MainFrame mainFrame) {
 		this.mainFrame = mainFrame;
 		this.gameEngine = mainFrame.getGameEngine();
 		this.toolbar = mainFrame.getToolbar();
@@ -31,13 +31,10 @@ public class RemovePlayerFormBtnListener implements ActionListener {
 		PlayerWrapper playerWrapperToRemove = (PlayerWrapper) toolbar.getPlayerList().getSelectedItem();
 		if (playerWrapperToRemove != null) {
 			Player playerToRemove = playerWrapperToRemove.getPlayer();
-			int action = JOptionPane.showConfirmDialog(mainFrame, "Are you sure you want to remove this player?",
-					"Confirm Exit", JOptionPane.YES_NO_OPTION); // This method returns an int where yes = 0, no = 1
 
-			if (action == JOptionPane.OK_OPTION) {
+			if (confirmRemovalOfPlayer() == JOptionPane.OK_OPTION) {
 				gameEngine.removePlayer(playerToRemove);
-				toolbar.setPlayers(gameEngine.getAllPlayers());
-				toolbar.getPlayerList().addActionListener(new PlayerListListener(mainFrame));
+				updateToolbar();
 				PlayerWrapper playerWrapper = (PlayerWrapper) toolbar.getPlayerList().getSelectedItem();
 				if (playerWrapper != null) {
 					Player playerToView = playerWrapper.getPlayer();
@@ -47,12 +44,11 @@ public class RemovePlayerFormBtnListener implements ActionListener {
 
 			statusBar.updateSystemStatus("Idle");
 			statusBar.updateLastAction("Removed Player");
-			new Thread() {
-				public void run() {
-					spinSpinnerIfReady();
-				}
-			}.start();
+			
+			spinSpinnerInNewThreadIfReady();
+			
 			mainFrame.getSummaryPanel().refreshSummary();
+			updateStatusBarIfLastPlayer();
 		} else {
 			JOptionPane.showMessageDialog(mainFrame, "There is no player to remove.", "Error",
 					JOptionPane.ERROR_MESSAGE);
@@ -60,8 +56,7 @@ public class RemovePlayerFormBtnListener implements ActionListener {
 	}
 
 	// In the rare case that 1 remaining player is in the game with their result set
-	// due
-	// to removal of other players.
+	// due to removal of other players.
 	public void spinSpinnerIfReady() {
 		if (mainFrame.readyToSpinSpinner()) {
 			statusBar.updateCurrentView("Spinner!");
@@ -76,6 +71,31 @@ public class RemovePlayerFormBtnListener implements ActionListener {
 		JOptionPane.showMessageDialog(mainFrame, "Spinner will now spin!", "Spinner", JOptionPane.INFORMATION_MESSAGE);
 		gameEngine.spinSpinner(100, 1000, 100, 50, 500, 50);
 		mainFrame.getPlayersWhoHaveSpun().clear();
+	}
+	
+	private void spinSpinnerInNewThreadIfReady() {
+		new Thread() {
+			public void run() {
+				spinSpinnerIfReady();
+			}
+		}.start();
+	}
+	
+	private void updateToolbar() {
+		toolbar.setPlayers(gameEngine.getAllPlayers());
+		toolbar.getPlayerList().addActionListener(new PlayerListListener(mainFrame));
+	}
+	
+	private int confirmRemovalOfPlayer() {
+		int action = JOptionPane.showConfirmDialog(mainFrame, "Are you sure you want to remove this player?",
+				"Confirm Exit", JOptionPane.YES_NO_OPTION); // This method returns an int where yes = 0, no = 1
+		return action;
+	}
+	
+	private void updateStatusBarIfLastPlayer() {
+		if(gameEngine.getAllPlayers().size()==0) {
+			statusBar.updateCurrentView("No one");
+		}
 	}
 
 }

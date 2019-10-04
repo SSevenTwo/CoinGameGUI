@@ -10,12 +10,12 @@ import model.interfaces.GameEngine;
 import view.MainFrame;
 import view.StatusBar;
 
-public class AddPlayerFormBtnListener implements ActionListener{
+public class AddPlayerBtnListener implements ActionListener{
 	
 	private MainFrame mainFrame;
 	private GameEngine gameEngine;
 
-	public AddPlayerFormBtnListener(MainFrame mainFrame) {
+	public AddPlayerBtnListener(MainFrame mainFrame) {
 		this.mainFrame = mainFrame;
 		this.gameEngine = mainFrame.getGameEngine();
 	}
@@ -29,8 +29,21 @@ public class AddPlayerFormBtnListener implements ActionListener{
 			   return;
 			}
 		
-		int newPlayerPoints = 0;
+		int initialPoints = getInitialPointsDialog();
+		gameEngine.addPlayer(new SimplePlayer(newPlayerId, newPlayerName, initialPoints));
 		
+		updateStatusBar();
+		updateSummaryPanelAndToolbar();
+	}
+	
+	private void updateStatusBar() {
+		StatusBar statusBar = mainFrame.getStatusBar();
+		statusBar.updateSystemStatus("Idle");
+		statusBar.updateLastAction("Added Player");
+	}
+	
+	private int getInitialPointsDialog() {
+		int newPlayerPoints = 0;
 		try {
 			newPlayerPoints = Integer.parseInt(JOptionPane.showInputDialog("Please enter the initial points:"));
 		} catch (NumberFormatException e1) {
@@ -38,13 +51,10 @@ public class AddPlayerFormBtnListener implements ActionListener{
 					"You must enter a number!", "Error",
 					JOptionPane.ERROR_MESSAGE);
 		};
-		
-		gameEngine.addPlayer(new SimplePlayer(newPlayerId, newPlayerName, newPlayerPoints));
-		
-		StatusBar statusBar = mainFrame.getStatusBar();
-		statusBar.updateSystemStatus("Idle");
-		statusBar.updateLastAction("Added Player");
-		
+		return newPlayerPoints;
+	}
+	
+	private void updateSummaryPanelAndToolbar() {
 		mainFrame.getToolbar().setPlayers(gameEngine.getAllPlayers());
 		mainFrame.getSummaryPanel().refreshSummary();
 	}
