@@ -4,13 +4,15 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+import javax.swing.SwingUtilities;
+
 import client.SimpleTestClient;
 import model.GameEngineImpl;
 import model.SimplePlayer;
 import model.interfaces.GameEngine;
 import model.interfaces.Player;
-import view.GameEngineCallbackGUI;
 import view.GameEngineCallbackImpl;
+import view.MainFrame;
 
 public class Driver {
 
@@ -41,12 +43,15 @@ public class Driver {
 			gameEngine.addPlayer(player);
 		}
 
-		GameEngineCallbackGUI game = new GameEngineCallbackGUI(gameEngine);
 		GameEngineCallbackImpl game1 = new GameEngineCallbackImpl();
+				
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				new MainFrame(gameEngine);
+			}
+		});
+		
 		gameEngine.addGameEngineCallback(game1);
-		gameEngine.addGameEngineCallback(game);
-
 	}
 
 }
-

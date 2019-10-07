@@ -12,8 +12,8 @@ public class GameEngineCallbackGUI implements GameEngineCallback {
 
 	private MainFrame mainFrame;
 
-	public GameEngineCallbackGUI(GameEngine gameEngine) {
-		this.mainFrame = new MainFrame(gameEngine);
+	public GameEngineCallbackGUI(MainFrame mainFrame) {
+		this.mainFrame = mainFrame;
 	}
 
 	@Override
@@ -60,7 +60,5 @@ public class GameEngineCallbackGUI implements GameEngineCallback {
 				mainFrame.getSummaryPanel().refreshSummaryWithResults(coinPair);
 			}
 		});
-
 	}
-
 }

@@ -20,6 +20,7 @@ import model.interfaces.Player;
 public class MainFrame extends JFrame {
 
 	private GameEngine gameEngine;
+	private GameEngineCallbackGUI gameEngineCallBackGUI;
 	private Toolbar toolbar;
 	private CoinPanel coinPanel;
 	private CoinPanel playerCoinPanel;
@@ -29,6 +30,8 @@ public class MainFrame extends JFrame {
 
 	public MainFrame(GameEngine gameEngine) {
 		super("Coin Game");
+		gameEngineCallBackGUI = new GameEngineCallbackGUI(this);
+		gameEngine.addGameEngineCallback(gameEngineCallBackGUI);
 		setLayout(new BorderLayout());
 		setModel(gameEngine);
 		createComponents();
