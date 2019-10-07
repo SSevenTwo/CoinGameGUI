@@ -30,6 +30,9 @@ public class AddPlayerBtnListener implements ActionListener{
 			}
 		
 		int initialPoints = getInitialPointsDialog();
+		if(initialPoints == -1) {
+			return;
+		}
 		gameEngine.addPlayer(new SimplePlayer(newPlayerId, newPlayerName, initialPoints));
 		
 		updateStatusBar();
@@ -43,13 +46,14 @@ public class AddPlayerBtnListener implements ActionListener{
 	}
 	
 	private int getInitialPointsDialog() {
-		int newPlayerPoints = 0;
+		int newPlayerPoints =-1;
 		try {
 			newPlayerPoints = Integer.parseInt(JOptionPane.showInputDialog("Please enter the initial points:"));
 		} catch (NumberFormatException e1) {
 			JOptionPane.showMessageDialog(mainFrame,
 					"You must enter a number!", "Error",
 					JOptionPane.ERROR_MESSAGE);
+			newPlayerPoints = -1;
 		};
 		return newPlayerPoints;
 	}

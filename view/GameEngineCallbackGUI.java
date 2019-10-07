@@ -40,11 +40,11 @@ public class GameEngineCallbackGUI implements GameEngineCallback {
 	@Override
 	public void playerResult(Player player, CoinPair coinPair, GameEngine engine) {
 		System.out.println(String.format("%s , final result: %s", player.getPlayerName(), coinPair));
-	//	SwingUtilities.invokeLater(new Runnable() {
-	//		public void run() {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
 				mainFrame.getSummaryPanel().refreshSummary();
-	//		}
-	//	});
+			}
+		});
 	}
 
 	@Override
@@ -55,11 +55,11 @@ public class GameEngineCallbackGUI implements GameEngineCallback {
 			message += player + "\n";
 		}
 		System.out.println(String.format("Final Player Results\n%s", message));
-		//SwingUtilities.invokeLater(new Runnable() {
-		//	public void run() {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
 				mainFrame.getSummaryPanel().refreshSummaryWithResults(coinPair);
-		//	}
-		//});
+			}
+		});
 
 	}
 

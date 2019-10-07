@@ -80,8 +80,6 @@ public class CoinPanel extends JPanel {
 		} else {
 			setCoin2Face(coin);
 		}
-		revalidate();
-		repaint();
 	}
 
 	public void update(Player player) {
@@ -91,8 +89,6 @@ public class CoinPanel extends JPanel {
 		} else {
 			hideAllCoins();
 		}
-		revalidate();
-		repaint();
 	}
 
 	private void hideAllCoins() {

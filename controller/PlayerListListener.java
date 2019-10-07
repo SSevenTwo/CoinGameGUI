@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import model.interfaces.Player;
 import view.CoinPanel;
 import view.MainFrame;
-import view.PlayerWrapper;
+import view.PlayerDecorator;
 import view.StatusBar;
 import view.Toolbar;
 
@@ -26,9 +26,9 @@ public class PlayerListListener implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		mainFrame.getCoinPanel().setVisible(false);
 
-		PlayerWrapper playerWrapper = (PlayerWrapper) toolbar.getPlayerList().getSelectedItem();
-		if (playerWrapper != null) {
-			Player playerToView = playerWrapper.getPlayer();
+		PlayerDecorator decoratedPlayer = (PlayerDecorator) toolbar.getPlayerList().getSelectedItem();
+		if (decoratedPlayer != null) {
+			Player playerToView = decoratedPlayer.getPlayer();
 			playerCoinPanel.update(playerToView);
 			mainFrame.add(playerCoinPanel,BorderLayout.CENTER);
 			playerCoinPanel.setVisible(true);

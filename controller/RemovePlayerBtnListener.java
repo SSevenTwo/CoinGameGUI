@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 import model.interfaces.GameEngine;
 import model.interfaces.Player;
 import view.MainFrame;
-import view.PlayerWrapper;
+import view.PlayerDecorator;
 import view.StatusBar;
 import view.Toolbar;
 
@@ -28,16 +28,16 @@ public class RemovePlayerBtnListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		PlayerWrapper playerWrapperToRemove = (PlayerWrapper) toolbar.getPlayerList().getSelectedItem();
-		if (playerWrapperToRemove != null) {
-			Player playerToRemove = playerWrapperToRemove.getPlayer();
+		PlayerDecorator decoratedPlayer = (PlayerDecorator) toolbar.getPlayerList().getSelectedItem();
+		if (decoratedPlayer != null) {
+			Player playerToRemove = decoratedPlayer.getPlayer();
 
 			if (confirmRemovalOfPlayer() == JOptionPane.OK_OPTION) {
 				gameEngine.removePlayer(playerToRemove);
 				updateToolbar();
-				PlayerWrapper playerWrapper = (PlayerWrapper) toolbar.getPlayerList().getSelectedItem();
+				Player playerWrapper = (Player) toolbar.getPlayerList().getSelectedItem();
 				if (playerWrapper != null) {
-					Player playerToView = playerWrapper.getPlayer();
+					Player playerToView = decoratedPlayer.getPlayer();
 					statusBar.updateCurrentView(playerToView.getPlayerName());
 				}
 			}

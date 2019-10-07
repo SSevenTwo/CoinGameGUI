@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 import model.enumeration.BetType;
 import model.interfaces.Player;
 import view.MainFrame;
-import view.PlayerWrapper;
+import view.PlayerDecorator;
 import view.StatusBar;
 import view.Toolbar;
 
@@ -28,9 +28,9 @@ public class PlaceBetBtnListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 
-		PlayerWrapper playerWrapper = (PlayerWrapper) toolbar.getPlayerList().getSelectedItem();
-		if (playerWrapper != null) {
-			Player playerToBet = playerWrapper.getPlayer();
+		PlayerDecorator decoratedPlayer = (PlayerDecorator) toolbar.getPlayerList().getSelectedItem();
+		if (decoratedPlayer != null) {
+			Player playerToBet = decoratedPlayer.getPlayer();
 			if (playerHasNotBet(playerToBet)) {
 				String betType = getBetTypeDialog();
 				if (betType == null) {return;}

@@ -31,7 +31,7 @@ public class Toolbar extends JToolBar {
 	private JButton spinPlayerBtn;
 	private JButton spinSpinnerBtn;
 	private JLabel activePlayer;
-	private JComboBox<PlayerWrapper> playerList;
+	private JComboBox<Player> playerList;
 	private Collection<Player> players;
 	private GridBagConstraints gc;
 	private boolean isSpinning;
@@ -49,7 +49,7 @@ public class Toolbar extends JToolBar {
 	}
 
 	private void createComponents() {
-		this.playerList = new JComboBox<PlayerWrapper>();
+		this.playerList = new JComboBox<Player>();
 		this.addPlayerBtn = new JButton("Add Player");
 		this.removePlayerBtn = new JButton("Remove Player");
 		this.placeBetBtn = new JButton("Place Bet");
@@ -149,23 +149,23 @@ public class Toolbar extends JToolBar {
 	}
 
 	private void addPlayersToComboBox() {
-		DefaultComboBoxModel<PlayerWrapper> combo = new DefaultComboBoxModel<PlayerWrapper>();
+		DefaultComboBoxModel<Player> combo = new DefaultComboBoxModel<Player>();
 		for (Player player : players) {
-			PlayerWrapper playerWrapper = new PlayerWrapper(player);
-			combo.addElement(playerWrapper);
+			Player decoratedPlayer = new PlayerDecorator(player);
+			combo.addElement(decoratedPlayer);
 		}
 		this.playerList.setModel(combo);
 	}
 
-	public JComboBox<PlayerWrapper> getPlayerList() {
+	public JComboBox<Player> getPlayerList() {
 		return playerList;
 	}
 
 	public void updateButtonState() {
 		Player player = null;
-		PlayerWrapper playerWrapper = (PlayerWrapper) playerList.getSelectedItem();
-		if (playerWrapper != null) {
-			player = playerWrapper.getPlayer();
+		PlayerDecorator decoratedPlayer = (PlayerDecorator) playerList.getSelectedItem();
+		if (decoratedPlayer != null) {
+			player = decoratedPlayer.getPlayer();
 		}
 
 		if (isSpinning) {

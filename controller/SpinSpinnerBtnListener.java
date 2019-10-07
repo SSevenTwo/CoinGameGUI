@@ -36,6 +36,7 @@ public class SpinSpinnerBtnListener implements ActionListener {
 
 	private void spinSpinner() {
 		JOptionPane.showMessageDialog(mainFrame, "Spinner will now spin!", "Spinner", JOptionPane.INFORMATION_MESSAGE);
+		mainFrame.getPlayerCoinPanel().setVisible(false);
 		mainFrame.add(mainFrame.getCoinPanel(),BorderLayout.CENTER);
 		mainFrame.getCoinPanel().setVisible(true);
 		gameEngine.spinSpinner(100, 1000, 100, 50, 500, 50);

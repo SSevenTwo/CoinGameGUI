@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 import model.interfaces.GameEngine;
 import model.interfaces.Player;
 import view.MainFrame;
-import view.PlayerWrapper;
+import view.PlayerDecorator;
 import view.StatusBar;
 import view.Toolbar;
 
@@ -32,9 +32,9 @@ public class SpinPlayerBtnListener implements ActionListener {
 		mainFrame.add(mainFrame.getCoinPanel(), BorderLayout.CENTER);
 		mainFrame.getCoinPanel().setVisible(true);
 
-		PlayerWrapper playerWrapperToRemove = (PlayerWrapper) toolbar.getPlayerList().getSelectedItem();
-		if (playerWrapperToRemove != null) {
-			Player playerToRemove = playerWrapperToRemove.getPlayer();
+		PlayerDecorator decoratedPlayer = (PlayerDecorator) toolbar.getPlayerList().getSelectedItem();
+		if (decoratedPlayer != null) {
+			Player playerToRemove = decoratedPlayer.getPlayer();
 			spinPlayer(playerToRemove.getPlayerId());
 		}
 	}
