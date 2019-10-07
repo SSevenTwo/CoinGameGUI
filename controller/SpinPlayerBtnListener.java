@@ -89,6 +89,9 @@ public class SpinPlayerBtnListener implements ActionListener {
 	private void removePlayerIfNegativePoints() {
 		for(Player player: gameEngine.getAllPlayers()) {
 			if(player.getPoints()<=0) {
+				JOptionPane.showMessageDialog(mainFrame, String
+						.format("Oh no! %s has lost all their points and have been eliminated!", player.getPlayerName()),
+						"Player Lost", JOptionPane.INFORMATION_MESSAGE);
 				gameEngine.removePlayer(player);
 			}
 		}

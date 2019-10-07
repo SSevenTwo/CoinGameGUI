@@ -6,7 +6,6 @@ import model.interfaces.Coin;
 import model.interfaces.CoinPair;
 import model.interfaces.GameEngine;
 import model.interfaces.Player;
-import model.util.Utilities;
 import view.interfaces.GameEngineCallback;
 
 public class GameEngineCallbackGUI implements GameEngineCallback {
@@ -19,8 +18,6 @@ public class GameEngineCallbackGUI implements GameEngineCallback {
 
 	@Override
 	public void playerCoinUpdate(Player player, Coin coin, GameEngine engine) {
-		System.out.println(String.format("%s coin %d flipped to %s", player.getPlayerName(), coin.getNumber(),
-				Utilities.titleConvert(coin.getFace())));
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				CoinPanel coinPanel = mainFrame.getCoinPanel();
@@ -32,8 +29,6 @@ public class GameEngineCallbackGUI implements GameEngineCallback {
 
 	@Override
 	public void spinnerCoinUpdate(Coin coin, GameEngine engine) {
-		System.out.println(String.format("Spinner coin %d flipped to %s", coin.getNumber(),
-				Utilities.titleConvert(coin.getFace())));
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				CoinPanel coinPanel = mainFrame.getCoinPanel();
