@@ -32,6 +32,7 @@ public class PlayerListListener implements ActionListener {
 			playerCoinPanel.update(playerToView);
 			mainFrame.add(playerCoinPanel,BorderLayout.CENTER);
 			playerCoinPanel.setVisible(true);
+			mainFrame.getToolbar().updateButtonState();
 			mainFrame.revalidate();
 			mainFrame.repaint();
 

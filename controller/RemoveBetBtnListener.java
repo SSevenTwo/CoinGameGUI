@@ -34,11 +34,11 @@ public class RemoveBetBtnListener implements ActionListener {
 			if (playerHasSetBet(playerToBet)) {
 				playerToBet.resetBet();
 				updateStatusBar();
-				updateSummaryPanelAndToolbar();
+				UtilityMethods.updateSummaryPanelAndToolbar(mainFrame);
 				mainFrame.getPlayersWhoHaveSpun().add(playerToBet);
 				new Thread() {
 					public void run() {
-						spinSpinnerIfReady();
+						UtilityMethods.spinSpinnerIfReady(mainFrame);
 					}
 				}.start();
 			} else {
@@ -65,34 +65,4 @@ public class RemoveBetBtnListener implements ActionListener {
 		statusBar.updateLastAction("Removed Bet");
 	}
 
-	private void updateSummaryPanelAndToolbar() {
-		mainFrame.getToolbar().setPlayers(gameEngine.getAllPlayers());
-		mainFrame.getSummaryPanel().refreshSummary();
-	}
-
-	private void spinSpinner() {
-		JOptionPane.showMessageDialog(mainFrame, "Spinner will now spin!", "Spinner", JOptionPane.INFORMATION_MESSAGE);
-		gameEngine.spinSpinner(100, 1000, 100, 50, 500, 50);
-		mainFrame.getPlayersWhoHaveSpun().clear();
-		mainFrame.getToolbar().getPlayersWhoHaveBet().clear();
-		removePlayerIfNegativePoints();
-	}
-
-	public void spinSpinnerIfReady() {
-		if (mainFrame.readyToSpinSpinner()) {
-			statusBar.updateCurrentView("Spinner!");
-			statusBar.updateSystemStatus("Spinning spinner...");
-			spinSpinner();
-			statusBar.updateSystemStatus("Idle");
-		}
-	}
-
-	private void removePlayerIfNegativePoints() {
-		for (Player player : gameEngine.getAllPlayers()) {
-			if (player.getPoints() <= 0) {
-				gameEngine.removePlayer(player);
-			}
-		}
-		updateSummaryPanelAndToolbar();
-	}
 }

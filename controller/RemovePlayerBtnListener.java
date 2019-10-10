@@ -55,28 +55,11 @@ public class RemovePlayerBtnListener implements ActionListener {
 		}
 	}
 
-	// In the rare case that 1 remaining player is in the game with their result set
-	// due to removal of other players.
-	public void spinSpinnerIfReady() {
-		if (mainFrame.readyToSpinSpinner()) {
-			statusBar.updateCurrentView("Spinner!");
-			statusBar.updateSystemStatus("Spinning spinner...");
-			mainFrame.getPlayerCoinPanel().setVisible(false);
-			spinSpinner();
-			statusBar.updateSystemStatus("Idle");
-		}
-	}
-
-	private void spinSpinner() {
-		JOptionPane.showMessageDialog(mainFrame, "Spinner will now spin!", "Spinner", JOptionPane.INFORMATION_MESSAGE);
-		gameEngine.spinSpinner(100, 1000, 100, 50, 500, 50);
-		mainFrame.getPlayersWhoHaveSpun().clear();
-	}
 	
 	private void spinSpinnerInNewThreadIfReady() {
 		new Thread() {
 			public void run() {
-				spinSpinnerIfReady();
+				UtilityMethods.spinSpinnerIfReady(mainFrame);
 			}
 		}.start();
 	}
