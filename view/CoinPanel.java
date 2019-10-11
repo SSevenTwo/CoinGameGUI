@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import model.enumeration.CoinFace;
 import model.interfaces.Coin;
 import model.interfaces.Player;
+
 @SuppressWarnings("serial")
 public class CoinPanel extends JPanel {
 
@@ -31,6 +32,7 @@ public class CoinPanel extends JPanel {
 		}
 	}
 
+	// Paints the coins into the panel taking into account the window size
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -55,16 +57,18 @@ public class CoinPanel extends JPanel {
 		}
 	}
 
+	// Gets the scale ratio of the coin images and the new size (being the window)
 	public double getScaleRatio(double originalSize, double newSize) {
 		double ratio = 1;
 		ratio = newSize / originalSize;
 		return ratio;
 	}
 
+	// Gets the scale factor of the coin images and the new size (being the window)
+	// Gets the smaller factor between the width and height to keep the aspect ratio
+	// of the coins.
 	public double getNewScaleFactor(Dimension originalSize, Dimension windowSize) {
-
 		double factor = 1;
-
 		if (originalSize != null && windowSize != null) {
 			double newScaleWidth = getScaleRatio(originalSize.width, windowSize.width);
 			double newScaleHeight = getScaleRatio(originalSize.height, windowSize.height);
@@ -74,7 +78,6 @@ public class CoinPanel extends JPanel {
 	}
 
 	public void update(Coin coin, int coinNumber) {
-
 		if (coinNumber == 1) {
 			setCoin1Face(coin);
 		} else {

@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
+import controller.util.ControllerUtilities;
 import model.interfaces.GameEngine;
 import model.interfaces.Player;
 import view.MainFrame;
@@ -26,6 +27,7 @@ public class SpinPlayerBtnListener implements ActionListener {
 		this.statusBar = mainFrame.getStatusBar();
 	}
 
+	// Spins the player if they have not already spun
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		mainFrame.getPlayerCoinPanel().setVisible(false);
@@ -43,30 +45,44 @@ public class SpinPlayerBtnListener implements ActionListener {
 		if (gameEngine.getPlayer(playerId) != null) {
 			Player playerToSpin = gameEngine.getPlayer(playerId);
 			if (mainFrame.playerHasNotAlreadySpun(playerToSpin)) {
-				toolbar.setSpinning(true);
-				toolbar.updateButtonState();
+				updateToolBarSpinning();
 				mainFrame.getPlayersWhoHaveSpun().add(playerToSpin);
-
-				new Thread() {
-					public void run() {
-						statusBar = mainFrame.getStatusBar();
-						statusBar.updateCurrentView(playerToSpin.getPlayerName());
-						statusBar.updateSystemStatus("Spinning Player...");
-						statusBar.updateLastAction("Spin Player");
-						gameEngine.spinPlayer(playerToSpin, 100, 1000, 100, 50, 500, 50);
-						statusBar.updateSystemStatus("Idle");
-						toolbar.setSpinning(false);
-						toolbar.updateButtonState();
-
-						UtilityMethods.spinSpinnerIfReady(mainFrame);
-					}
-				}.start();
+				spinPlayerInNewThread(playerToSpin);
 
 			} else {
 				JOptionPane.showMessageDialog(mainFrame, "Player has already spun!", "Error",
 						JOptionPane.ERROR_MESSAGE);
 			}
 		}
+	}
+	
+	private void spinPlayerInNewThread(Player playerToSpin) {
+		new Thread() {
+			public void run() {
+				updateStatusBarToSpinning(playerToSpin);
+				gameEngine.spinPlayer(playerToSpin, 100, 1000, 100, 50, 500, 50);
+				updateStatusBarAndToolbarToIdle();
+				ControllerUtilities.spinSpinnerIfReady(mainFrame);
+			}
+		}.start();
+	}
+	
+	private void updateToolBarSpinning() {
+		toolbar.setSpinning(true);
+		toolbar.updateButtonState();
+	}
+	
+	private void updateStatusBarToSpinning(Player playerToSpin) {
+		statusBar = mainFrame.getStatusBar();
+		statusBar.updateCurrentView(playerToSpin.getPlayerName());
+		statusBar.updateSystemStatus("Spinning Player...");
+		statusBar.updateLastAction("Spin Player");
+	}
+	
+	private void updateStatusBarAndToolbarToIdle() {
+		statusBar.updateSystemStatus("Idle");
+		toolbar.setSpinning(false);
+		toolbar.updateButtonState();
 	}
 
 }

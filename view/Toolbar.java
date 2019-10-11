@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -58,7 +59,7 @@ public class Toolbar extends JToolBar {
 		this.spinSpinnerBtn = new JButton("Spin Spinner");
 		this.activePlayer = new JLabel("  Current Selected Player: ");
 		this.playersWhoHaveBet = new ArrayList<Player>();
-		
+
 		setMnemonics();
 	}
 
@@ -103,12 +104,10 @@ public class Toolbar extends JToolBar {
 		add(activePlayer, gc);
 
 		gc.gridx++;
-		if (players != null) {
-			setPlayers(players);
-		} else {
-			gc.weightx = 1;
-			add(this.playerList, gc);
-		}
+		setPlayers(players);
+		gc.weightx = 1;
+		add(this.playerList, gc);
+
 		setBorder(new MatteBorder(1, 0, 1, 0, Color.GRAY));
 		setFloatable(false);
 	}
@@ -134,17 +133,15 @@ public class Toolbar extends JToolBar {
 	}
 
 	public void setPlayers(Collection<Player> players) {
+		Collections.reverse((ArrayList<Player>) players);
 		this.players = players;
 		refreshComboBox();
-		gc.weightx = 1;
-		add(playerList, gc);
 		revalidate();
 		repaint();
 	}
 
 	public void refreshComboBox() {
 		// Setup or refresh combo box upon removing players
-		remove(playerList);
 		addPlayersToComboBox();
 	}
 

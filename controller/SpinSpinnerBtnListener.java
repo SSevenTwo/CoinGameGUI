@@ -1,36 +1,38 @@
 package controller;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
-import model.interfaces.GameEngine;
+import controller.util.ControllerUtilities;
 import view.MainFrame;
 import view.StatusBar;
 import view.Toolbar;
 
 public class SpinSpinnerBtnListener implements ActionListener {
 	private MainFrame mainFrame;
-	private GameEngine gameEngine;
 	private StatusBar statusBar;
 	private Toolbar toolbar;
 
 	public SpinSpinnerBtnListener(MainFrame mainFrame) {
 		this.mainFrame = mainFrame;
-		this.gameEngine = mainFrame.getGameEngine();
 		this.toolbar = mainFrame.getToolbar();
 		this.statusBar = mainFrame.getStatusBar();
 	}
 
+	// Spins the spinner early
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (confirmReadyToSpin() == JOptionPane.OK_OPTION) {
-			toolbar.setSpinning(true);
-			toolbar.updateButtonState();
+			updateToolBarToSpinning();
 			spinSpinnerInNewThread();
 		}
+	}
+	
+	private void updateToolBarToSpinning() {
+		toolbar.setSpinning(true);
+		toolbar.updateButtonState();
 	}
 
 	private int confirmReadyToSpin() {
@@ -42,15 +44,23 @@ public class SpinSpinnerBtnListener implements ActionListener {
 	private void spinSpinnerInNewThread() {
 		new Thread() {
 			public void run() {
-				statusBar.updateCurrentView("Spinner!");
-				statusBar.updateSystemStatus("Spinning spinner...");
-				UtilityMethods.spinSpinner(mainFrame);
-				UtilityMethods.removePlayerIfNegativePoints(mainFrame);
-				statusBar.updateSystemStatus("Idle");
-				toolbar.setSpinning(false);
-				toolbar.updateButtonState();
+				updateStatusBarToSpinning();
+				ControllerUtilities.spinSpinner(mainFrame);
+				ControllerUtilities.removePlayerIfNegativePoints(mainFrame);
+				updateStatusBarAndToolbarToIdle();
 			}
 		}.start();
+	}
+	
+	private void updateStatusBarToSpinning() {
+		statusBar.updateCurrentView("Spinner!");
+		statusBar.updateSystemStatus("Spinning spinner...");
+	}
+	
+	private void updateStatusBarAndToolbarToIdle() {
+		statusBar.updateSystemStatus("Idle");
+		toolbar.setSpinning(false);
+		toolbar.updateButtonState();
 	}
 
 }

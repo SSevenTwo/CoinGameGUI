@@ -19,7 +19,8 @@ public class AddPlayerBtnListener implements ActionListener{
 		this.mainFrame = mainFrame;
 		this.gameEngine = mainFrame.getGameEngine();
 	}
-
+	
+	// Asks user to input player ID, name and initial points to add a new player.
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		String newPlayerId = JOptionPane.showInputDialog("Please enter the player ID:");
@@ -45,6 +46,7 @@ public class AddPlayerBtnListener implements ActionListener{
 		statusBar.updateLastAction("Added Player");
 	}
 	
+	// Creates an input dialogue box to enter initial points
 	private int getInitialPointsDialog() {
 		int newPlayerPoints =-1;
 		try {

@@ -5,8 +5,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
+import controller.util.ControllerUtilities;
 import model.enumeration.BetType;
-import model.interfaces.GameEngine;
 import model.interfaces.Player;
 import view.MainFrame;
 import view.PlayerDecorator;
@@ -15,41 +15,34 @@ import view.Toolbar;
 
 public class RemoveBetBtnListener implements ActionListener {
 	private MainFrame mainFrame;
-	private GameEngine gameEngine;
 	private Toolbar toolbar;
-	private StatusBar statusBar;
 
 	public RemoveBetBtnListener(MainFrame mainFrame) {
 		this.mainFrame = mainFrame;
-		this.gameEngine = mainFrame.getGameEngine();
 		this.toolbar = mainFrame.getToolbar();
-		this.statusBar = mainFrame.getStatusBar();
 	}
 
+	// Removes the players current bet if they have one.
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		PlayerDecorator decoratedPlayer = (PlayerDecorator) toolbar.getPlayerList().getSelectedItem();
-		if (decoratedPlayer != null) {
+		if (ControllerUtilities.decoratedPlayerIsNotNull(decoratedPlayer, mainFrame)) {
 			Player playerToBet = decoratedPlayer.getPlayer();
 			if (playerHasSetBet(playerToBet)) {
 				playerToBet.resetBet();
 				updateStatusBar();
-				UtilityMethods.updateSummaryPanelAndToolbar(mainFrame);
+				ControllerUtilities.updateSummaryPanelAndToolbar(mainFrame);
 				mainFrame.getPlayersWhoHaveSpun().add(playerToBet);
 				new Thread() {
 					public void run() {
-						UtilityMethods.spinSpinnerIfReady(mainFrame);
+						ControllerUtilities.spinSpinnerIfReady(mainFrame);
 					}
 				}.start();
 			} else {
 				JOptionPane.showMessageDialog(mainFrame, "Player has no bet to remove.", "Error",
 						JOptionPane.ERROR_MESSAGE);
 			}
-		} else {
-			JOptionPane.showMessageDialog(mainFrame, "No player to remove bets from!", "Error",
-					JOptionPane.ERROR_MESSAGE);
 		}
-
 	}
 
 	private boolean playerHasSetBet(Player playerToBet) {

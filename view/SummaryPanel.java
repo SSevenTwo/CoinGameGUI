@@ -6,9 +6,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Rectangle;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
@@ -63,7 +61,6 @@ public class SummaryPanel extends JPanel {
 	}
 
 	private void addWinLossResults(Collection<Player> players, CoinPair spinnerResult) {
-		Collections.reverse((ArrayList<Player>) players);
 
 		for (Player player : players) {
 			JPanel panel = new JPanel();
@@ -90,7 +87,6 @@ public class SummaryPanel extends JPanel {
 	}
 
 	private void addPlayers(Collection<Player> players) {
-		Collections.reverse((ArrayList<Player>) players);
 		makePlayerBoxes(players);
 	}
 
@@ -112,7 +108,7 @@ public class SummaryPanel extends JPanel {
 
 	private void updatePlayerList() {
 		setUpPlayerList();
-		if(gameEngine.getAllPlayers().size()==0) {
+		if (gameEngine.getAllPlayers().size() == 0) {
 			playerList.removeAll();
 			revalidate();
 			repaint();
@@ -177,14 +173,13 @@ public class SummaryPanel extends JPanel {
 
 	private void addFreshPlayerListWithNoResults(Collection<Player> players) {
 		setUpPlayerList();
-		Collections.reverse((ArrayList<Player>) players);
-		for(Player player: players) {
+		for (Player player : players) {
 			player.setResult(null);
 		}
 		makePlayerBoxes(players);
 		mainFrame.getToolbar().setPlayers(players);
 	}
-	
+
 	private void setSize() {
 		Rectangle r = this.getBounds();
 		setPreferredSize(new Dimension(280, (int) r.getHeight()));

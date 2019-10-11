@@ -24,7 +24,6 @@ public class GameEngineCallbackGUI implements GameEngineCallback {
 				coinPanel.update(coin, coin.getNumber());
 			}
 		});
-
 	}
 
 	@Override

@@ -10,11 +10,11 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
 import controller.AddPlayerBtnListener;
-import controller.PlaceBetBtnListener;
-import controller.RemovePlayerBtnListener;
 import controller.MenuAboutListener;
 import controller.MenuCheckBoxListener;
 import controller.MenuExitListener;
+import controller.PlaceBetBtnListener;
+import controller.RemovePlayerBtnListener;
 
 @SuppressWarnings("serial")
 public class MenuBar extends JMenuBar {

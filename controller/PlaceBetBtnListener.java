@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import javax.swing.JOptionPane;
 
+import controller.util.ControllerUtilities;
 import model.enumeration.BetType;
 import model.interfaces.Player;
 import view.MainFrame;
@@ -24,27 +25,30 @@ public class PlaceBetBtnListener implements ActionListener {
 		this.toolbar = mainFrame.getToolbar();
 		this.playersWhoHaveBet = toolbar.getPlayersWhoHaveBet();
 	}
-
+	
+	// Places a bet for a user IF they have not set a bet.
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-
+		
 		PlayerDecorator decoratedPlayer = (PlayerDecorator) toolbar.getPlayerList().getSelectedItem();
-		if (decoratedPlayer != null) {
+		if (ControllerUtilities.decoratedPlayerIsNotNull(decoratedPlayer,mainFrame)) {
 			Player playerToBet = decoratedPlayer.getPlayer();
 			if (playerHasNotBet(playerToBet)) {
-				String betType = getBetTypeDialog();
-				if (betType == null) {return;}
-				int betAmount = getBetAmountDialog();
-				setBet(playerToBet, betAmount, betType);
-				toolbar.updateButtonState();
-				
+				getBetFromUser(playerToBet);
 			} else {
 				JOptionPane.showMessageDialog(mainFrame, "Player already has a bet placed.", "Error",
 						JOptionPane.ERROR_MESSAGE);
 			}
-		} else {
-			JOptionPane.showMessageDialog(mainFrame, "There is no player!", "Error", JOptionPane.ERROR_MESSAGE);
 		}
+		toolbar.updateButtonState();
+	}
+	
+	// Ask the user for bet amount / bet types
+	private void getBetFromUser(Player playerToBet) {
+		String betType = getBetTypeDialog();
+		if (betType == null) {return;}
+		int betAmount = getBetAmountDialog();
+		setBet(playerToBet, betAmount, betType);
 		toolbar.updateButtonState();
 	}
 	
@@ -78,6 +82,7 @@ public class PlaceBetBtnListener implements ActionListener {
 		return betAmount;
 	}
 	
+	// Set the bet for the player
 	private void setBet(Player playerToBet, int betAmount, String betType) {
 		if (playerToBet.setBet(betAmount)) {
 			playerToBet.setBetType(getBetType(betType));

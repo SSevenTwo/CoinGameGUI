@@ -22,6 +22,7 @@ public class PlayerListListener implements ActionListener {
 		this.playerCoinPanel = mainFrame.getPlayerCoinPanel();
 	}
 
+	// DIsplay the players coin panel with their last results
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		mainFrame.getCoinPanel().setVisible(false);
@@ -29,18 +30,29 @@ public class PlayerListListener implements ActionListener {
 		PlayerDecorator decoratedPlayer = (PlayerDecorator) toolbar.getPlayerList().getSelectedItem();
 		if (decoratedPlayer != null) {
 			Player playerToView = decoratedPlayer.getPlayer();
-			playerCoinPanel.update(playerToView);
-			mainFrame.add(playerCoinPanel,BorderLayout.CENTER);
-			playerCoinPanel.setVisible(true);
-			mainFrame.getToolbar().updateButtonState();
-			mainFrame.revalidate();
-			mainFrame.repaint();
-
-			StatusBar statusBar = mainFrame.getStatusBar();
-			statusBar.updateCurrentView(playerToView.getPlayerName());
-			statusBar.updateLastAction("Viewed Player");
+			updatePlayerCoinPanel(playerToView);
+			updateMainFrameAndToolbar();
+			updateStatusBar(playerToView);
 		}
 
+	}
+
+	private void updatePlayerCoinPanel(Player playerToView) {
+		playerCoinPanel.update(playerToView);
+		mainFrame.add(playerCoinPanel, BorderLayout.CENTER);
+		playerCoinPanel.setVisible(true);
+	}
+	
+	private void updateMainFrameAndToolbar() {
+		mainFrame.getToolbar().updateButtonState();
+		mainFrame.revalidate();
+		mainFrame.repaint();
+	}
+	
+	private void updateStatusBar(Player playerToView) {
+		StatusBar statusBar = mainFrame.getStatusBar();
+		statusBar.updateCurrentView(playerToView.getPlayerName());
+		statusBar.updateLastAction("Viewed Player");
 	}
 
 }

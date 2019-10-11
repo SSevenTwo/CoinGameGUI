@@ -30,8 +30,7 @@ public class MainFrame extends JFrame {
 
 	public MainFrame(GameEngine gameEngine) {
 		super("Coin Game");
-		gameEngineCallBackGUI = new GameEngineCallbackGUI(this);
-		gameEngine.addGameEngineCallback(gameEngineCallBackGUI);
+		setUpGameEngineCallBackGUI();
 		setLayout(new BorderLayout());
 		setModel(gameEngine);
 		createComponents();
@@ -39,6 +38,11 @@ public class MainFrame extends JFrame {
 		setMenuBar();
 		addComponentsToLayout();
 		setUpLayoutSettings();
+	}
+	
+	private void setUpGameEngineCallBackGUI() {
+		gameEngineCallBackGUI = new GameEngineCallbackGUI(this);
+		gameEngine.addGameEngineCallback(gameEngineCallBackGUI);
 	}
 	
 	private void addToolbarListeners() {
@@ -57,7 +61,6 @@ public class MainFrame extends JFrame {
 		playerCoinPanel.setVisible(false);
 		playersWhoHaveSpun = new ArrayList<Player>();
 		createToolbar();
-
 		summaryPanel = new SummaryPanel(this);
 		statusBar = new StatusBar();
 	}
