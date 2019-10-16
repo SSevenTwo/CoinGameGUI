@@ -60,12 +60,18 @@ public class SummaryPanel extends JPanel {
 		addWinLossResults(gameEngine.getAllPlayers(), spinnerResult);
 	}
 
+	// Decorates the player boxes to red, green or blue depending if they win, loss or did not bet
 	private void addWinLossResults(Collection<Player> players, CoinPair spinnerResult) {
 
 		for (Player player : players) {
 			JPanel panel = new JPanel();
 
-			if (playerWinOrLose(player, spinnerResult)) {
+			if(player.getBetType().equals(BetType.NO_BET)) {
+				panel.add(new PlayerBox(player, 3));
+				panel.setBorder(new MatteBorder(0, 0, 1, 0, Color.BLUE));
+				panel.setBackground(Color.BLUE);
+			}
+			else if (playerWinOrLose(player, spinnerResult)) {
 				panel.add(new PlayerBox(player, 1));
 				panel.setBorder(new MatteBorder(1, 1, 1, 1, Color.GREEN));
 				panel.setBackground(Color.GREEN);
@@ -83,13 +89,14 @@ public class SummaryPanel extends JPanel {
 			validate();
 			repaint();
 		}
-		playAgain();
+		playAgain(spinnerResult);
 	}
 
 	private void addPlayers(Collection<Player> players) {
 		makePlayerBoxes(players);
 	}
 
+	// Creates player boxes for the summary panel
 	private void makePlayerBoxes(Collection<Player> players) {
 		for (Player player : players) {
 			JPanel panel = new JPanel();
@@ -116,17 +123,19 @@ public class SummaryPanel extends JPanel {
 		addPlayers(gameEngine.getAllPlayers());
 	}
 
-	private void playAgain() {
-		JOptionPane.showMessageDialog(mainFrame, "Spin to play again!", "Finished", JOptionPane.INFORMATION_MESSAGE);
+	private void playAgain(CoinPair spinnerResult) {
+		String message = String.format("Spinner results: %s \nSpin to play again!", spinnerResult.toString());
+		JOptionPane.showMessageDialog(mainFrame, message, "Finished", JOptionPane.INFORMATION_MESSAGE);
 		resetAllPlayers();
-		addFreshPlayerListWithNoResults(gameEngine.getAllPlayers());
 		mainFrame.getToolbar().updateButtonState();
 
 	}
 
+	// Resets player bets and removes their results.
 	private void resetAllPlayers() {
 		for (Player player : gameEngine.getAllPlayers()) {
 			gameEngine.placeBet(player, 0, BetType.NO_BET);
+			player.setResult(null);
 		}
 	}
 
@@ -169,15 +178,6 @@ public class SummaryPanel extends JPanel {
 		gbc.weightx = 1;
 		gbc.weighty = 1;
 		playerList.add(new JPanel(), gbc);
-	}
-
-	private void addFreshPlayerListWithNoResults(Collection<Player> players) {
-		setUpPlayerList();
-		for (Player player : players) {
-			player.setResult(null);
-		}
-		makePlayerBoxes(players);
-		mainFrame.getToolbar().setPlayers(players);
 	}
 
 	private void setSize() {

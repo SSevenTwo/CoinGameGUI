@@ -46,12 +46,11 @@ public class CoinPanel extends JPanel {
 			Image coin1 = coin1PreScale.getScaledInstance(scaleWidth, scaleHeight, Image.SCALE_SMOOTH);
 			Image coin2 = coin2PreScale.getScaledInstance(scaleWidth, scaleHeight, Image.SCALE_SMOOTH);
 
-			int x = 0;
+			int x = (this.getWidth()/2) - coin1.getWidth(this);
 			int y = (getHeight() - coin1.getHeight(this)) / 2;
-
 			g.drawImage(coin1, x, y, this);
-
-			x = ((coin1.getWidth(this) / 2) + (scaleWidth / 2));
+			
+			x = (this.getWidth()/2);
 			y = (getHeight() - coin1.getHeight(this)) / 2;
 			g.drawImage(coin2, x, y, this);
 		}

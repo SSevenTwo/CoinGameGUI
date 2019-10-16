@@ -35,8 +35,9 @@ public class Toolbar extends JToolBar {
 	private JComboBox<Player> playerList;
 	private Collection<Player> players;
 	private GridBagConstraints gc;
-	private boolean isSpinning;
+	private boolean spinning;
 	private Collection<Player> playersWhoHaveBet;
+	private Player playerSpinning;
 
 	public Toolbar(MainFrame mainFrame) {
 		this(null, mainFrame);
@@ -165,7 +166,7 @@ public class Toolbar extends JToolBar {
 			player = decoratedPlayer.getPlayer();
 		}
 
-		if (isSpinning) {
+		if (spinning) {
 			spinPlayerBtn.setEnabled(false);
 			spinSpinnerBtn.setEnabled(false);
 			return;
@@ -196,7 +197,7 @@ public class Toolbar extends JToolBar {
 	}
 
 	public void setSpinning(boolean isSpinning) {
-		this.isSpinning = isSpinning;
+		this.spinning = isSpinning;
 	}
 
 	public JButton getPlaceBetBtn() {
@@ -219,5 +220,18 @@ public class Toolbar extends JToolBar {
 		}
 		return true;
 	}
+
+	public void setPlayerSpinning(Player playerToSpin) {
+		this.playerSpinning = playerToSpin;
+	}
+	
+	public Player getPlayerSpinning() {
+		return this.playerSpinning;
+	}
+
+	public boolean isSpinning() {
+		return spinning;
+	}
+	
 
 }

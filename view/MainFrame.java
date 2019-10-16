@@ -30,9 +30,9 @@ public class MainFrame extends JFrame {
 
 	public MainFrame(GameEngine gameEngine) {
 		super("Coin Game");
+		setModel(gameEngine);
 		setUpGameEngineCallBackGUI();
 		setLayout(new BorderLayout());
-		setModel(gameEngine);
 		createComponents();
 		addToolbarListeners();
 		setMenuBar();
@@ -53,6 +53,7 @@ public class MainFrame extends JFrame {
 		toolbar.getSpinPlayerBtn().addActionListener(new SpinPlayerBtnListener(this));
 		toolbar.getPlayerList().addActionListener(new PlayerListListener(this));
 		toolbar.getSpinSpinnerBtn().addActionListener(new SpinSpinnerBtnListener(this));
+		toolbar.updateButtonState();
 	}
 
 	private void createComponents() {

@@ -48,6 +48,10 @@ public class PlayerBox extends JPanel {
 			status = "";
 			colour = "";
 		}
+		if (playerWin == 3) {
+			status = "Did not bet!";
+			colour = "blue";
+		}
 	}
 	
 	private void setInstanceVariables(Player player, int playerWin) {

@@ -35,7 +35,7 @@ public class SpinPlayerBtnListener implements ActionListener {
 		mainFrame.getCoinPanel().setVisible(true);
 
 		PlayerDecorator decoratedPlayer = (PlayerDecorator) toolbar.getPlayerList().getSelectedItem();
-		if (decoratedPlayer != null) {
+		if (ControllerUtilities.decoratedPlayerIsNotNull(decoratedPlayer, mainFrame)) {
 			Player playerToRemove = decoratedPlayer.getPlayer();
 			spinPlayer(playerToRemove.getPlayerId());
 		}
@@ -45,7 +45,7 @@ public class SpinPlayerBtnListener implements ActionListener {
 		if (gameEngine.getPlayer(playerId) != null) {
 			Player playerToSpin = gameEngine.getPlayer(playerId);
 			if (mainFrame.playerHasNotAlreadySpun(playerToSpin)) {
-				updateToolBarSpinning();
+				updateToolBarSpinning(playerToSpin);
 				mainFrame.getPlayersWhoHaveSpun().add(playerToSpin);
 				spinPlayerInNewThread(playerToSpin);
 
@@ -67,8 +67,9 @@ public class SpinPlayerBtnListener implements ActionListener {
 		}.start();
 	}
 	
-	private void updateToolBarSpinning() {
+	private void updateToolBarSpinning(Player playerToSpin) {
 		toolbar.setSpinning(true);
+		toolbar.setPlayerSpinning(playerToSpin);
 		toolbar.updateButtonState();
 	}
 	
@@ -81,6 +82,7 @@ public class SpinPlayerBtnListener implements ActionListener {
 	
 	private void updateStatusBarAndToolbarToIdle() {
 		statusBar.updateSystemStatus("Idle");
+		toolbar.setPlayerSpinning(null);
 		toolbar.setSpinning(false);
 		toolbar.updateButtonState();
 	}

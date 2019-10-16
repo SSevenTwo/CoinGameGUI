@@ -30,11 +30,30 @@ public class PlayerListListener implements ActionListener {
 		PlayerDecorator decoratedPlayer = (PlayerDecorator) toolbar.getPlayerList().getSelectedItem();
 		if (decoratedPlayer != null) {
 			Player playerToView = decoratedPlayer.getPlayer();
-			updatePlayerCoinPanel(playerToView);
+			// Shows the spinning player if they are spinning
+			if (checkIfPlayerIsSpinning(playerToView)) {
+			} else {
+				updatePlayerCoinPanel(playerToView);
+			}
 			updateMainFrameAndToolbar();
 			updateStatusBar(playerToView);
 		}
 
+	}
+
+	private boolean checkIfPlayerIsSpinning(Player playerToView) {
+		if (toolbar.isSpinning()) {
+			if (toolbar.getPlayerSpinning() != null) {
+				Player playerSpinning = toolbar.getPlayerSpinning();
+				if (playerToView.getPlayerId().equals(playerSpinning.getPlayerId())) {
+					playerCoinPanel.setVisible(false);
+					mainFrame.add(mainFrame.getCoinPanel(), BorderLayout.CENTER);
+					mainFrame.getCoinPanel().setVisible(true);
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	private void updatePlayerCoinPanel(Player playerToView) {
@@ -42,13 +61,13 @@ public class PlayerListListener implements ActionListener {
 		mainFrame.add(playerCoinPanel, BorderLayout.CENTER);
 		playerCoinPanel.setVisible(true);
 	}
-	
+
 	private void updateMainFrameAndToolbar() {
 		mainFrame.getToolbar().updateButtonState();
 		mainFrame.revalidate();
 		mainFrame.repaint();
 	}
-	
+
 	private void updateStatusBar(Player playerToView) {
 		StatusBar statusBar = mainFrame.getStatusBar();
 		statusBar.updateCurrentView(playerToView.getPlayerName());
